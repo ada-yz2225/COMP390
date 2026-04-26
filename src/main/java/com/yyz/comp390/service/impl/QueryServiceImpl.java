@@ -4,10 +4,9 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.JSONObject;
-import com.yyz.comp390.controller.FileController;
 import com.yyz.comp390.entity.File;
+import com.yyz.comp390.entity.PrivacyBudgetKV;
 import com.yyz.comp390.entity.Subset;
-import com.yyz.comp390.entity.dto.PrivacyBudgetKV;
 import com.yyz.comp390.entity.dto.QueryDTO;
 import com.yyz.comp390.entity.dto.QueryNameDTO;
 import com.yyz.comp390.exception.QueryException;
@@ -23,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class QueryServiceImpl implements QueryService {
 
     private final RestTemplate restTemplate;
     private final Map<Long, Double> privacyBudget = new ConcurrentHashMap<>();
+    private final Map<Long, Object> budgetLocks = new ConcurrentHashMap<>();
     public static String pythonURL = "http://127.0.0.1:5000";
     private final ExecutorService executorService;
 
@@ -57,8 +59,10 @@ public class QueryServiceImpl implements QueryService {
     @PostConstruct
     public void initializePrivacyBudgetMap(){
         List<PrivacyBudgetKV> kv = fileMapper.getAllPrivacyBudget();
+        privacyBudget.clear();
         for(PrivacyBudgetKV privacyBudgetKV : kv){
             privacyBudget.put(privacyBudgetKV.getId(), privacyBudgetKV.getPrivacyBudget().doubleValue());
+            budgetLocks.computeIfAbsent(privacyBudgetKV.getId(), key -> new Object());
         }
     }
 
@@ -68,17 +72,27 @@ public class QueryServiceImpl implements QueryService {
     }
 
     public void handleUploadFile(Long id, Double budget){
+        if (id == null || budget == null) {
+            return;
+        }
+        budgetLocks.computeIfAbsent(id, key -> new Object());
         privacyBudget.put(id, budget);
     }
 
-    private void handlePrivacyBudget(Long id, Double epsilon){
-        if(!privacyBudget.containsKey(id)){
-            throw new QueryException("File no longer available");
-        }
-        privacyBudget.put(id, privacyBudget.get(id) - epsilon);
-        if(privacyBudget.get(id) == 0){
-            privacyBudget.remove(id);
-            fileMapper.setFilePermissionNoById(id);
+    private void deductPrivacyBudget(Long id, Double epsilon) {
+        Object lock = budgetLocks.computeIfAbsent(id, key -> new Object());
+        synchronized (lock) {
+            Double current = privacyBudget.get(id);
+            if (current == null) {
+                throw new QueryException("File no longer available");
+            }
+            double remaining = current - epsilon;
+            if (remaining <= 0) {
+                privacyBudget.remove(id);
+                fileMapper.setFilePermissionNoById(id);
+                return;
+            }
+            privacyBudget.put(id, remaining);
         }
     }
 
@@ -97,17 +111,26 @@ public class QueryServiceImpl implements QueryService {
             return future.get();
         } catch (QueryException | ExecutionException e){
             throw new QueryException(e.getLocalizedMessage());
-        } catch (RejectedExecutionException | InterruptedException e) {
+        } catch (RejectedExecutionException e) {
             throw new QueryException("Too many query requests, please try again later.");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new QueryException("Query interrupted, please retry.");
         }
     }
 
     private JSONObject executeQuery(QueryDTO queryDTO) {
         File file = fileMapper.getFullFileById(queryDTO.getFileId());
+        if (file == null || !"YES".equals(file.getPermission())) {
+            throw new QueryException("File no longer available");
+        }
 
-        String filePath = FileController.downloadPath + "\\" + file.getAlias();
+        String filePath = resolveFilePath(file.getAlias());
         // Get python class name and function name;
         QueryNameDTO nameDTO = algorithmMapper.getQueryNamesById(queryDTO.getAlgorithmId());
+        if (nameDTO == null) {
+            throw new QueryException("Algorithm not available");
+        }
         String className = nameDTO.getClassName();
         String functionName = nameDTO.getFunctionName();
 
@@ -121,7 +144,8 @@ public class QueryServiceImpl implements QueryService {
             throw new QueryException("Epsilon must be strictly greater than 0 and smaller than 1");
         }
 
-        if(privacyBudget.get(queryDTO.getFileId()) - epsilon <= 0){
+        Double currentBudget = privacyBudget.get(queryDTO.getFileId());
+        if (currentBudget == null || currentBudget - epsilon <= 0){
             throw new QueryException("This file is no longer available!");
         }
         request.put("epsilon", epsilon);
@@ -137,15 +161,10 @@ public class QueryServiceImpl implements QueryService {
             if(!checkParallelComposition(subsets)){ // Check whether subsets overlap
                 throw new QueryException("Check your query conditions. Parallel composition requires disjoint subsets!");
             }
-            epsilon = 0.0;
             for(Subset subset : subsets){
                 subset.setColumnName(queryDTO.getColumnName());
-                double tmp = subset.getEpsilon();
-                if(tmp > epsilon){
-                    epsilon = tmp;
-                }
+                subset.setEpsilon(epsilon);
             }
-            request.put("epsilon", epsilon);
         }
 
         request.put("className", className);
@@ -160,7 +179,7 @@ public class QueryServiceImpl implements QueryService {
             String responseBody = response.getBody();
             if(response.getStatusCode().is2xxSuccessful()){
 
-                handlePrivacyBudget(file.getId(), epsilon);
+                deductPrivacyBudget(file.getId(), epsilon);
                 Object parsedResponse = parseResponse(responseBody);
 
                 // Identify Json type, json object or json array
@@ -194,7 +213,11 @@ public class QueryServiceImpl implements QueryService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        String path = FileController.downloadPath + "\\" + fileMapper.getFullFileById(id).getAlias();
+        File file = fileMapper.getFullFileById(id);
+        if (file == null || !"YES".equals(file.getPermission())) {
+            throw new QueryException("File no longer available");
+        }
+        String path = resolveFilePath(file.getAlias());
         String url = pythonURL + "/getFileColumns?file_path=" + path;
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         if(response.getStatusCode().is2xxSuccessful()){
@@ -208,7 +231,11 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public Double getBudget(Long id) {
-        return privacyBudget.get(id);
+        Double budget = privacyBudget.get(id);
+        if (budget == null) {
+            return 0d;
+        }
+        return budget;
     }
 
     private boolean checkParallelComposition(List<Subset> subsets){
@@ -219,5 +246,10 @@ public class QueryServiceImpl implements QueryService {
             }
         }
         return true;
+    }
+
+    private String resolveFilePath(String alias) {
+        Path downloadPath = Paths.get(System.getProperty("user.home"), "Downloads").toAbsolutePath();
+        return downloadPath.resolve(alias).toString();
     }
 }

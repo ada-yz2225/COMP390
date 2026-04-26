@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Algorithm</title>
-    <link rel="stylesheet" href="algorithm.css">
+    <link rel="stylesheet" href="/shared/algorithm.css">
 </head>
 <body>
 <div class="container">
-    <!-- 左侧菜单栏 -->
+
     <aside class="sidebar">
         <ul>
             <li id="file-management">
@@ -23,10 +23,8 @@
         </ul>
     </aside>
 
-    <!-- 主内容区域 -->
     <main class="content">
         <div class="search-bar">
-            <!-- 查询条件 -->
             <label for="algorithm-name">Algorithm name: </label>
             <input type="text" id="algorithm-name" placeholder="Algorithm name">
             <label for="algorithm-creator">Creator: </label>
@@ -45,7 +43,6 @@
             <button id="search-button">Search</button>
         </div>
 
-        <!-- 查询结果 -->
         <div class="result-bar">
             <button id="add-algorithm">New</button>
             <button id="modify-selected">Edit</button>
@@ -65,7 +62,7 @@
             </tr>
             </thead>
             <tbody>
-            <!-- 用户数据将在这里动态渲染 -->
+
             </tbody>
         </table>
     </main>
@@ -130,6 +127,6 @@
 </div>
 
 <script src="../request.js"></script>
-<script src="algorithm.js"></script>
+<script src="/shared/algorithm.js"></script>
 </body>
 

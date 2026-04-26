@@ -6,7 +6,6 @@
     <title>Login</title>
     <script>
         async function handleLogin(event) {
-            console.log('handleLogin function called')
             event.preventDefault();
 
             const username = document.getElementById('username').value;
@@ -22,15 +21,12 @@
                 });
 
                 const result = await response.json();
-                console.log('Result: ', result);
-
                 if(result.code === 1){
                     const role = result.data?.role;
                     const token = result.data.token;
                     localStorage.setItem('jwtToken', token);
-                    console.log('Token saved', token)
                     if (role === 'ADMIN') {
-                        window.location.href = '/admin/Admin.html';
+                        window.location.href = 'admin/User.html';
                     } else if (role === 'CURATOR') {
                         window.location.href = '/curator/File.html';
                     } else if (role === 'USER') {

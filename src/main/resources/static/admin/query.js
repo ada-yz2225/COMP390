@@ -1,6 +1,6 @@
 let selectedFileId = null;
 let selectedAlgorithmId = null;
-let columnNames = []
+let columnNames = [];
 
 document.getElementById('toggle-conditional-query').style.display = 'block';
 document.getElementById('toggle-parallel-query').style.display = 'block';
@@ -22,7 +22,7 @@ document.getElementById('file-search-button').addEventListener('click', async ()
         if (result.code === 1) {
             selectedFileId = result.data.id;
             renderFileOutput(result.data, 'file-result-box');
-            // fetchColumnFilters();
+
         } else {
             document.getElementById('output').innerText = `Error: ${result.message}`;
         }
@@ -57,14 +57,14 @@ document.getElementById('algorithm-search-button').addEventListener('click', asy
 });
 
 function removeModal(){
-    // 清空输入框
+
     document.querySelectorAll('#column-filters input').forEach(input => {
         input.value = null;
     });
     document.querySelectorAll('#column-subsets input').forEach(input => {
         input.value = null;
     })
-    // 清空下拉框
+
     document.querySelectorAll('#column-filters select').forEach(select => {
         select.selectedIndex = 0;
     });
@@ -79,7 +79,7 @@ async function fetchColumnFilters() {
         const result = await response.json();
         if (result.code === 1) {
             columnNames = result.data;
-            // renderColumnFilters(result.data);
+
         }
     } catch (error) {
         alert('Failed to load columns.');
@@ -113,16 +113,16 @@ document.getElementById('toggle-conditional-query').addEventListener('click', ()
             document.getElementById('parallel-query-section').style.display = 'none';
             removeModal();
         }
-        // 显示高级查询
+
         section.style.display = 'block';
     } else {
-        // 隐藏高级查询，并清空所有输入框的值
+
         section.style.display = 'none';
     }
     removeModal();
 });
 
-// 监听 "添加筛选条件" 按钮
+
 document.getElementById('add-filter').addEventListener('click', () => {
     if (columnNames.length === 0) {
         alert('Please select a file first, and wait for loading the column names.');
@@ -131,7 +131,7 @@ document.getElementById('add-filter').addEventListener('click', () => {
     addFilterRow();
 });
 
-// 动态添加筛选条件行
+
 function addFilterRow() {
     const container = document.getElementById('column-filters');
 
@@ -149,7 +149,7 @@ function addFilterRow() {
             <option value="<=">&le;</option>
             <option value="==">=</option>
         </select>
-        <input type="text" class="value" placeholder="输入值">
+        <input type="text" class="value" placeholder="Input value">
         <select class="logic">
             <option value="and">AND</option>
             <option value="or">OR</option>
@@ -201,14 +201,11 @@ function addSubsetRow() {
         <input type="number" min="-2147483648" max="2147483647" class="min">
         <label for="max">Higher bound: </label>
         <input type="number" min="-2147483648" max="2147483647" class="max">
-        <label for="epsilon">Subset epsilon: </label>
-        <input type="number" min="0.01" max="1" step="0.1" class="epsilon">
         <button onclick="removeFilter(this)">Delete</button>
     `;
     container.appendChild(div);
 }
 
-// 删除筛选条件行
 function removeFilter(button) {
     button.parentElement.remove();
 }
@@ -231,7 +228,8 @@ document.getElementById('submit-query-button').addEventListener('click', async (
             filters.push({ columnName, operator, value, logic });
         }
     });
-    let epsilon = document.getElementById('epsilon')?.value|| null;
+    let epsilon = document.getElementById('epsilon')?.value ||
+                  document.getElementById('parallel-epsilon')?.value || null;
     if(filters.length === 0){
         filters = null;
     }
@@ -241,14 +239,12 @@ document.getElementById('submit-query-button').addEventListener('click', async (
     document.querySelectorAll('.subset-row').forEach(row => {
         const min = row.querySelector('.min').value;
         const max = row.querySelector('.max').value;
-        const epsilon = row.querySelector('.epsilon').value;
+        const epsilon = epsilon.value;
 
         subsets.push({min, max, epsilon});
 
     });
-    if(subsets.length > 0){
-        epsilon = null;
-    } else {
+    if(subsets.length === 0){
         subsets = null;
     }
     const columnName = document.getElementById('columnName')?.value|| null;
@@ -272,7 +268,7 @@ document.getElementById('submit-query-button').addEventListener('click', async (
         const result = await response.json();
 
         if (result.code === 1) {
-            fetchPrivacyBudget();
+            await fetchPrivacyBudget();
             renderQueryOutput(result.data);
         } else {
             document.getElementById('output').innerText = `Error: ${result.message}`;
@@ -293,7 +289,7 @@ function highlightSelected(selectedItem, parentId) {
 
 function renderFileOutput(data) {
     const outputDiv = document.getElementById('file-results');
-    outputDiv.innerHTML = ''; // 清空之前的结果
+    outputDiv.innerHTML = '';
     data.forEach(file => {
         const listItem = document.createElement('li');
         listItem.textContent = file.filename;
@@ -311,15 +307,15 @@ function renderFileOutput(data) {
 
 function renderAlgorithmOutput(data) {
     const outputDiv = document.getElementById('algorithm-results');
-    outputDiv.innerHTML = ''; // 清空之前的结果
+    outputDiv.innerHTML = '';
     data.forEach(algorithm => {
         const listItem = document.createElement('li');
         listItem.textContent = algorithm.name;
-        listItem.dataset.id = algorithm.id; // 设置 data-id 属性
-        listItem.classList.add('clickable'); // 添加点击样式
+        listItem.dataset.id = algorithm.id;
+        listItem.classList.add('clickable');
         listItem.addEventListener('click', () => {
-            selectedAlgorithmId = algorithm.id; // 记录选中的算法ID
-            highlightSelected(listItem, 'algorithm-results'); // 高亮选中项
+            selectedAlgorithmId = algorithm.id;
+            highlightSelected(listItem, 'algorithm-results');
         });
         outputDiv.appendChild(listItem);
     });

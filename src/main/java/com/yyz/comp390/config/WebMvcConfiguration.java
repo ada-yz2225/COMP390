@@ -24,6 +24,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/curator/**")
                 .addPathPatterns("/file/**")
                 .addPathPatterns("/algorithm/**")
+                .addPathPatterns("/query/**")
                 .excludePathPatterns(
                         "/user/login",
                         "/static/**",

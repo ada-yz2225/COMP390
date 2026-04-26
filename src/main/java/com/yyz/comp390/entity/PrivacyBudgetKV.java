@@ -1,4 +1,4 @@
-package com.yyz.comp390.entity.dto;
+package com.yyz.comp390.entity;
 
 import lombok.Data;
 

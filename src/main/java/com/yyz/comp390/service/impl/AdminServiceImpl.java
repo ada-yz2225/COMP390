@@ -11,8 +11,8 @@ import com.yyz.comp390.service.AdminService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +20,8 @@ import java.util.List;
 @Service
 @Slf4j
 public class AdminServiceImpl implements AdminService {
+
+    private static final BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @Resource
     AdminMapper adminMapper;
@@ -37,7 +39,7 @@ public class AdminServiceImpl implements AdminService {
 
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
-        user.setPassword(DigestUtils.md5DigestAsHex(userDTO.getPassword().getBytes()));
+        user.setPassword(PASSWORD_ENCODER.encode(userDTO.getPassword()));
         user.setDelFlag("NOT_DELETE");
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
@@ -52,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void editUser(UserEditDTO userEditDTO) {
         log.info(userEditDTO.toString());
-        userEditDTO.setPassword(DigestUtils.md5DigestAsHex(userEditDTO.getPassword().getBytes()));
+        userEditDTO.setPassword(PASSWORD_ENCODER.encode(userEditDTO.getPassword()));
         adminMapper.editUser(userEditDTO);
     }
 

@@ -32,8 +32,8 @@ body {
 
 .sidebar ul li a {
     text-decoration: none;
-    color: inherit; /* 保持文字颜色与父元素一致 */
-    display: block; /* 确保链接占据整个列表项区域 */
+    color: inherit;
+    display: block;
 }
 
 .sidebar ul li.active {
@@ -86,57 +86,4 @@ table th {
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
-}
-.result-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.result-box {
-    border: 1px solid #ddd;
-    padding: 10px;
-    width: 48%;
-    height: 300px;
-    background: #f9f9f9;
-    overflow-y: auto;
-}
-
-.result-box ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.result-box ul li {
-    padding: 8px;
-    border-bottom: 1px solid #ccc;
-    cursor: pointer;
-}
-
-.result-box ul li:hover {
-    background-color: #eef;
-}
-
-.result-box ul li.selected {
-    background-color: #d0e8ff;
-}
-
-.clickable {
-    cursor: pointer;
-    padding: 5px;
-    margin: 2px 0;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-}
-
-.clickable:hover {
-    background-color: #f0f0f0;
-}
-
-.selected {
-    background-color: #d0ebff;
-    border-color: #1d72b8;
-    font-weight: bold;
 }

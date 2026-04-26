@@ -3,7 +3,6 @@ package com.yyz.comp390.controller;
 import com.yyz.comp390.entity.ApiResult;
 import com.yyz.comp390.entity.User;
 import com.yyz.comp390.entity.dto.LoginDTO;
-import com.yyz.comp390.entity.dto.UserDTO;
 import com.yyz.comp390.entity.vo.LoginVO;
 import com.yyz.comp390.jwt.JwtProperties;
 import com.yyz.comp390.jwt.JwtUtil;
@@ -31,6 +30,7 @@ public class UserController {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
+        claims.put("role", user.getRole());
         String token = JwtUtil.createJWT(
                 jwtProperties.getSecretKey(),
                 jwtProperties.getTtl(),
@@ -38,7 +38,6 @@ public class UserController {
         );
         LoginVO loginVO = new LoginVO();
         loginVO.setToken(token);
-        log.info(token);
         loginVO.setId(user.getId());
         loginVO.setUsername(user.getUsername());
         loginVO.setRole(user.getRole());

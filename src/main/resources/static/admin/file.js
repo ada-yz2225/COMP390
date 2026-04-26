@@ -1,21 +1,15 @@
 document.addEventListener('DOMContentLoaded', () =>{
-    // 默认加载用户管理页面数据
     loadFileData();
 
-    // 绑定上传文件事件
     document.getElementById('new-button').addEventListener('click', showNewModal);
 
-    // 绑定搜索按钮点击事件
     document.getElementById('search-button').addEventListener('click', loadFileData);
 
-    // 绑定修改文件按钮
     document.getElementById('modify-selected').addEventListener('click', handleEditFile);
 
-    // 绑定批量删除按钮
     document.getElementById('delete-selected').addEventListener('click', handleDelete);
 });
 
-// 加载用户数据
 async function loadFileData(){
     const getFileDTO = {
         filename: document.getElementById('filename')?.value|| null,
@@ -138,7 +132,7 @@ async function showEditModal(id){
     document.getElementById('edit-modal').style.display = 'block';
 
     try {
-        // 获取文件的详细信息
+
         const response = await fetchWithAuth(`/file/getFile/${id}`, {
             method: 'GET'
         });
@@ -147,7 +141,7 @@ async function showEditModal(id){
         if (result.code === 1) {
             const fileData = result.data;
 
-            // 回显文件信息到表单
+
             document.getElementById('edit-filename').value = fileData.filename;
             document.getElementById('edit-privacyBudget').value = fileData.privacyBudget;
             document.getElementById('edit-permission').value = fileData.permission;

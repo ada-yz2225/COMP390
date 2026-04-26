@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="user.css">
 </head>
 <body>
 <div class="container">
-    <!-- 左侧菜单栏 -->
+
     <aside class="sidebar">
         <ul>
             <li id="user-management" class="active">
-                <a href="Admin.html">User</a>
+                <a href="User.html">User</a>
             </li>
             <li id="file-management">
                 <a href="File.html">File</a>
@@ -26,10 +26,9 @@
         </ul>
     </aside>
 
-    <!-- 主内容区域 -->
     <main class="content">
         <div class="search-bar">
-            <!-- 查询条件 -->
+
             <label for="username">Username: </label>
             <input type="text" id="username" placeholder="Username">
             <label for="role">Select role: </label>
@@ -56,7 +55,6 @@
             <button id="search-button">Search</button>
         </div>
 
-        <!-- 查询结果 -->
         <div class="result-bar">
             <button id="add-user">New</button>
             <button id="modify-selected">Edit</button>
@@ -76,13 +74,12 @@
             </tr>
             </thead>
             <tbody>
-            <!-- 用户数据将在这里动态渲染 -->
+
             </tbody>
         </table>
     </main>
 </div>
 
-<!-- 修改用户信息弹窗 -->
 <div class="modal" id="edit-modal" style="display: none;">
     <div class="modal-content">
         <h3>Edit User Info</h3>
@@ -102,7 +99,6 @@
     </div>
 </div>
 
-<!-- 新增用户弹窗 -->
 <div class="modal" id="add-modal" style="display: none;">
     <div class="modal-content">
         <h3>New User</h3>
@@ -122,6 +118,6 @@
     </div>
 </div>
 <script src="../request.js"></script>
-<script src="admin.js"></script>
+<script src="user.js"></script>
 </body>
 </html>

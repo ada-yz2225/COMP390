@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Query</title>
-    <link rel="stylesheet" href="query.css">
+    <link rel="stylesheet" href="/shared/query.css">
 </head>
 <body>
 <div class="container">
-    <!-- 左侧菜单栏 -->
+
     <aside class="sidebar">
         <ul>
             <li id="file-management">
@@ -23,17 +23,15 @@
         </ul>
     </aside>
 
-    <!-- 主内容区域 -->
     <main class="content">
         <div class="search-bar">
-            <!-- 文件查询 -->
+
             <div style="margin-bottom: 20px;">
                 <label for="file-name">File Name: </label>
                 <input type="text" id="file-name" placeholder="Enter file name">
                 <button id="file-search-button">Search File</button>
             </div>
 
-            <!-- 算法查询 -->
             <div>
                 <label for="algorithm-name">Algorithm Name: </label>
                 <input type="text" id="algorithm-name" placeholder="Enter algorithm name">
@@ -41,7 +39,6 @@
             </div>
         </div>
 
-        <!-- 查询结果展示 -->
         <div class="result-container">
             <div class="result-box" id="file-result-box">
                 <h3>File Results:</h3>
@@ -53,21 +50,19 @@
             </div>
         </div>
 
-        <!-- 提交查询 -->
         <div style="margin-top: 20px; text-align: center;">
             <button id="submit-query-button" style="padding: 10px 20px; font-size: 16px;">Submit Query</button>
         </div>
 
-        <!-- 查询结果展示 -->
         <div class="result-bar">
             <h3>Analysis Result:</h3>
             <div id="output" style="border: 1px solid #ddd; padding: 10px; min-height: 200px; background: #f9f9f9; overflow: auto;">
-                <!-- 结果将在这里动态渲染 -->
+
             </div>
         </div>
     </main>
 </div>
-<script src="query.js"></script>
 <script src="../request.js"></script>
+<script src="/shared/query.js"></script>
 </body>
 </html>

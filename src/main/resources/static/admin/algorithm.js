@@ -1,17 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 默认加载用户管理页面数据
+
     loadAlgorithmData();
 
-    // 绑定搜索按钮点击事件
     document.getElementById('search-button').addEventListener('click', loadAlgorithmData);
 
-    // 绑定修改算法按钮
     document.getElementById('modify-selected').addEventListener('click', handleEditAlgorithm);
 
-    // 绑定批量删除按钮
     document.getElementById('delete-selected').addEventListener('click', handleDelete);
 
-    // 绑定新增用户按钮点击事件
     document.getElementById('add-algorithm').addEventListener('click', showNewNodal);
 });
 
@@ -102,7 +98,7 @@ async function handleAddAlgorithm() {
         const result = await response.json()
         if (result.code === 1) {
             alert('Create successfully');
-            loadAlgorithmData(); // 刷新用户列表
+            loadAlgorithmData();
         } else {
             alert(result.message || 'Create failed');
         }

@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File</title>
-    <link rel="stylesheet" href="file.css">
+    <link rel="stylesheet" href="/shared/file.css">
 </head>
 <body>
 <div class="container">
-    <!-- 左侧菜单栏 -->
     <aside class="sidebar">
         <ul>
             <li id="file-management">
@@ -23,7 +22,6 @@
         </ul>
     </aside>
 
-    <!-- 文件查询 -->
     <main class="content">
         <div class="search-bar">
             <label for="filename">File name: </label>
@@ -44,7 +42,6 @@
             <button id="search-button">Search</button>
         </div>
 
-        <!--查询结果-->
         <div class="result-bar">
             <button id="new-button">New</button>
             <button id="modify-selected">Edit</button>
@@ -64,12 +61,12 @@
             </tr>
             </thead>
             <tbody>
-            <!-- 文件数据将在这里动态渲染 -->
+
             </tbody>
         </table>
     </main>
 </div>
-<!--上传文件弹窗-->
+
 <div class="modal" id="new-modal" style="display: none;">
     <div class="modal-content">
         <h3>Upload New File</h3>
@@ -88,7 +85,7 @@
         </form>
     </div>
 </div>
-<!--编辑文件弹窗-->
+
 <div class="modal" id="edit-modal" style="display: none;">
     <div class="modal-content">
         <h3>Edit file settings</h3>
@@ -107,7 +104,7 @@
         </form>
     </div>
 </div>
-<script src="file.js"></script>
 <script src="../request.js"></script>
+<script src="/shared/file.js"></script>
 </body>
 </html>

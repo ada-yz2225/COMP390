@@ -1,21 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 默认加载用户管理页面数据
+
     loadUserData();
 
-    // 绑定搜索按钮点击事件
     document.getElementById('search-button').addEventListener('click', loadUserData);
 
-    // 绑定修改用户按钮
     document.getElementById('modify-selected').addEventListener('click', handleModify);
 
-    // 绑定批量删除按钮
     document.getElementById('delete-selected').addEventListener('click', handleDelete);
 
-    // 绑定新增用户按钮点击事件
     document.getElementById('add-user').addEventListener('click', showAddModal);
 });
 
-// 加载用户数据
 async function loadUserData() {
     const userListDTO = {
         username: document.getElementById('username')?.value|| null,
@@ -55,7 +50,6 @@ async function loadUserData() {
     }
 }
 
-// 渲染用户表格
 function renderUserTable(users) {
     const tableBody = document.getElementById('user-table').querySelector('tbody');
     tableBody.innerHTML = '';
@@ -79,7 +73,6 @@ function showAddModal() {
     const addModal = document.getElementById('add-modal');
     addModal.style.display = 'block';
 
-    // 绑定确认和取消按钮事件
     document.getElementById('add-confirm').onclick = handleAddUser;
     document.getElementById('add-cancel').onclick = () => {
         addModal.style.display = 'none';
@@ -95,7 +88,6 @@ async function handleAddUser() {
         return;
     }
 
-    // 隐藏新增用户弹窗
     document.getElementById('add-modal').style.display = 'none';
     try {
         const response = await fetchWithAuth('/admin/createUser', {
@@ -108,7 +100,7 @@ async function handleAddUser() {
         const result = await response.json()
         if (result.code === 1) {
             alert('Create successfully');
-            loadUserData(); // 刷新用户列表
+            loadUserData();
         } else {
             alert(result.message || 'Create failed');
         }
@@ -126,7 +118,6 @@ function handleModify() {
     }
 
     const userId = selected[0];
-    // 显示修改弹窗
     showEditModal(userId);
 }
 
@@ -137,17 +128,14 @@ function handleDelete() {
         return;
     }
 
-    // 发送删除请求
     deleteUsers(selected);
 }
 
-// 获取选中用户ID
 function getSelectedUsers() {
     return Array.from(document.querySelectorAll('tbody input[type="checkbox"]:checked'))
         .map(input => input.dataset.id);
 }
 
-// 删除用户
 async function deleteUsers(id) {
     try {
         const response = await fetchWithAuth('/admin/deleteUsers', {
@@ -170,11 +158,9 @@ async function deleteUsers(id) {
     }
 }
 
-// 显示编辑弹窗
 function showEditModal(id) {
     document.getElementById('edit-modal').style.display = 'block';
 
-    // 绑定编辑确认按钮事件
     document.getElementById('edit-confirm').onclick = async () => {
         const username = document.getElementById('edit-username').value;
         const role = document.getElementById('edit-role').value;
@@ -201,7 +187,6 @@ function showEditModal(id) {
         }
     };
 
-    // 绑定取消按钮事件
     document.getElementById('edit-cancel').onclick = () => {
         document.getElementById('edit-modal').style.display = 'none';
     };

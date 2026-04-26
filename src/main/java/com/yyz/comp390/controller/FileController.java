@@ -30,7 +30,6 @@ public class FileController {
     @Resource
     private FileService fileService;
 
-//    @Value("${comp390.file.download-path}")
     public static String downloadPath = Paths.get(System.getProperty("user.home"), "Downloads").toAbsolutePath().toString();
 
     @PostMapping("/getFiles")
@@ -87,8 +86,7 @@ public class FileController {
         fileEntity.setFilename(originalFileName);
         fileEntity.setAlias(newFileName);
         fileEntity.setCreateTime(LocalDateTime.now());
-        Long id = BaseContext.getCurrentId();
-        fileEntity.setCreateId(id);
+        fileEntity.setCreateId(BaseContext.getCurrentId());
         fileEntity.setPrivacyBudget(privacyBudget);
         fileEntity.setPermission(permission);
         fileService.uploadFile(fileEntity);

@@ -18,7 +18,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: Az`12345
+    password: Ab123456
     url: jdbc:mysql://localhost:3306/comp390?serverTimezone=Europe/London&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
   mvc:
     static-path-pattern: /**

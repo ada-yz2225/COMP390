@@ -70,8 +70,8 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void uploadFile(File file) {
-        queryServiceImpl.handleUploadFile(file.getId(), file.getPrivacyBudget().doubleValue());
         fileMapper.insert(file);
+        queryServiceImpl.handleUploadFile(file.getId(), file.getPrivacyBudget().doubleValue());
     }
 
     @Override

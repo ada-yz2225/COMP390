@@ -4,12 +4,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yyz.comp390.entity.File;
 import com.yyz.comp390.entity.dto.EditFileDTO;
 import com.yyz.comp390.entity.dto.GetFileDTO;
-import com.yyz.comp390.entity.dto.PrivacyBudgetKV;
+import com.yyz.comp390.entity.PrivacyBudgetKV;
 import com.yyz.comp390.entity.vo.GetFileVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface FileMapper extends BaseMapper<File> {

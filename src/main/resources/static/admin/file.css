@@ -32,8 +32,8 @@ body {
 
 .sidebar ul li a {
     text-decoration: none;
-    color: inherit; /* 保持文字颜色与父元素一致 */
-    display: block; /* 确保链接占据整个列表项区域 */
+    color: inherit;
+    display: block;
 }
 
 .sidebar ul li.active {
