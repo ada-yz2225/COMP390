@@ -1,0 +1,165 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    cursor: pointer;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.sidebar ul li.active {
+    background-color: #34495e;
+}
+
+.sidebar ul li:hover {
+    background-color: #3c5568;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.search-bar,
+.result-bar {
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f4f4f4;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+.result-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.result-box {
+    border: 1px solid #ddd;
+    padding: 10px;
+    width: 48%;
+    height: 300px;
+    background: #f9f9f9;
+    overflow-y: auto;
+}
+
+.result-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.result-box ul li {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.result-box ul li:hover {
+    background-color: #eef;
+}
+
+.result-box ul li.selected {
+    background-color: #d0e8ff;
+}
+
+.privacy-budget-box {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+}
+
+.conditional-query {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f4f4f4;
+    display: none;
+}
+
+.parallel-query {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f4f4f4;
+    display: none;
+}
+
+.clickable {
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px 0;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.clickable:hover {
+    background-color: #f0f0f0;
+}
+
+.selected {
+    background-color: #d0ebff;
+    border-color: #1d72b8;
+    font-weight: bold;
+}
